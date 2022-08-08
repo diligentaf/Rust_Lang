@@ -43,10 +43,25 @@ fn main() {
     // - There can only be one owner at a time
     // - When the owner goes out of scope, the value will be dropped
 
-    let s: &str= "hello"; // stores data in Stack
+    let s: &str= "hello"; // string literal stores data in Stack (immutable)
 
     // There is a second string type called String.
     // String manages data allocated on the heap and as such is a ble to store an amount of text that is unknown to us at compile time.
-    let s: String = String::from("hello");
+    let mut s: String = String::from("hello"); // String stores data in Heap (mutable)
+    s.push_str(", world! yo!!"); 
+    println!("{}", s);
+
+    // In summary :
+    // string literals are fast and efficient but they are immutable
+    // string literal's contents are known at compile time
+
+    // String type is mutable and growable piece of text.
+    // We need to allocate amount of memory on the heap because it's unknown at compile time
+    // - The memory must be requested from the memory allocator at runtime.
+    // - We need a way of returning this memory to the allocator when we're done with our String.
+
+    let s1 = String::from("my");
+    let s2 = s1; // <- s1 has moved into s2
+    println!("{}, name is ninja!", s2);
 
 }
