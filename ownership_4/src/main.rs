@@ -43,7 +43,7 @@ fn main() {
     // - There can only be one owner at a time
     // - When the owner goes out of scope, the value will be dropped
 
-    let s: &str= "hello"; // string literal stores data in Stack (immutable)
+    let s = "hello"; // string literal stores data in Stack (immutable)
 
     // There is a second string type called String.
     // String manages data allocated on the heap and as such is a ble to store an amount of text that is unknown to us at compile time.
@@ -87,9 +87,9 @@ fn main() {
     // Charater Type like char
     // Tuples if they only contain types that also implement "Copy" (Example ➡️ (i32, i32) can implement "Copy" but (i32, String) can't)
 
-    //  == Heap && Stack's Ownerships and Functions ==
+    //  == Heap And Stack's Ownerships and Functions ==
     println!();
-    println!("== Heap && Stack's Ownerships and Functions ==");
+    println!("== Heap And Stack's Ownerships and Functions ==");
     let s = String::from("hello");
     takes_ownership(s); // <-- s's value moves into the function ...
     // println!("{}", s); <-- trying to use s after the being moved will throw a compile-time error.
@@ -171,6 +171,61 @@ fn main() {
     let reference_to_nothing = dangle();
     println!("{reference_to_nothing}");
 
+    //  == The Slicing ==
+    println!();
+    println!("== The Slicing ==");
+    let mut s = String::from("hello world");
+    let word = first_word(&s);
+    println!("{}", word); // word will get the value 5
+    s.clear(); // this empties the String, making it equal to ""
+
+    //  == String Slices ==
+    println!();
+    println!("== String Slices ==");
+    let s = String::from("hello world");
+    let first_word = &s[0..5]; // [index..length]
+    let second_word = &s[6..11];
+    println!("{}, {}", first_word, second_word);
+
+    let s = String::from("hello");
+    let slice = &s[0..2]; // this is equal to 👇
+    println!("{slice}");
+    let slice = &s[..5];
+    println!("{slice}"); // this 👆
+
+    let s = String::from("hello");
+    let len = s.len();
+    let slice = &s[3..len]; // this is equal to 👇
+    println!("{slice}");
+    let slice = &s[3..]; // this 👆
+    println!("{slice}");
+
+    let s = String::from("hello🔥");
+    let len = s.len();
+    let slice = &s[0..len]; // this is equal to 👇
+    println!("{slice}");
+    let slice = &s[..]; // this 👆
+    println!("{slice}");
+    // String slice only works on UTF-8
+
+    //  == The Slicing Upgrade ==
+    println!();
+    println!("== The Slicing Upgrade ==");
+    let mut s = String::from("hello world");
+    let word = first_word_upgrade(&s);
+    // s.clear(); // Rust disallows the mutable reference in clear and the immutable reference  in word. Compilation fails.
+    println!("{}", word); 
+    s.clear(); 
+
+    // let s = "Hello, World!"; // Thus, s is &str. It's slice pointing to the binary. It's immutable.
+
+    //  == Other Slices ==
+    println!();
+    println!("== Other Slices ==");
+    let a = [1, 2, 3, 4, 5];
+    let slice = &a[1..3];
+    assert_eq!(slice, &[2,3]);
+
 } // Here, x goes out of scope, but s's value has moved
 
 fn takes_ownership(some_string: String) { // some_string comes into scope
@@ -215,3 +270,30 @@ fn dangle() -> String {
     // * Note *
     // - You can have either 1 mutabel refernce or ANY number of immutable references
     // - References must always be valid.
+
+fn first_word(s: &String) -> usize {
+    let bytes = s.as_bytes();
+
+    for (i, &item) in bytes.iter().enumerate() {
+        if item == b' ' {
+            return i;
+        }
+    }
+
+    s.len()
+}
+
+fn first_word_upgrade(s: &String) -> &str {
+    let bytes = s.as_bytes();
+
+    for (i, &item) in bytes.iter().enumerate() {
+        if item == b' ' {
+            return &s[0..i];
+        }
+    }
+
+    &s[..]
+}
+
+    // The concept of ownership, borrowing, and slices ensure memory safety in Rust programs at compile time
+    // Having the owner of data automatically clean up that data when the owner goes out of scope
