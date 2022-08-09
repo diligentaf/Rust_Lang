@@ -157,6 +157,7 @@ fn main() {
 
     //  == Combining Mutable and Immutable Data ==
     println!();
+    println!("These values are from immutable references -> {}, {}", r1, r2);
     println!("== Combining Mutable and Immutable Data ==");
     let mut s = String::from("mutableS");
     let r1 = &s;
@@ -164,9 +165,11 @@ fn main() {
     println!("These values are from immutable references -> {}, {}", r1, r2);
     // let r3 = &mut s; // We can't have a mutable reference while we have immutable reference on same data.
     // println!("{}, {}, {}", r1, r2, r3);
-    let r3 = &mut s;
+    let r3 = &mut s; // The sceops don't overalp. so this code is allowed.
     println!("{}", r3);
 
+    let reference_to_nothing = dangle();
+    println!("{reference_to_nothing}");
 
 } // Here, x goes out of scope, but s's value has moved
 
@@ -203,3 +206,12 @@ fn calculate_length_for_reference(s: &String) -> usize {
 fn change(some_string: &mut String) {
     some_string.push_str("reference, yo");
 }
+
+fn dangle() -> String {
+    let s = String::from("dangle function from string");
+    // &s // Because s i created inside dangle, s will be delocated once the scope ends
+    s // The solution is to return the String directly. Ownership is moved out. Nothing is deallocated
+}
+    // * Note *
+    // - You can have either 1 mutabel refernce or ANY number of immutable references
+    // - References must always be valid.
