@@ -16,6 +16,20 @@ fn main() {
     //            - package can have multiple binary crates by placing files in src/bin.
     //                - In src/bin, each file will be a separate binary crate.
     //    - Crates: A tree of modules that produces a library or executable
+    //        - Start from the crate root: When compiling crate, it starts from crate root (src/main.rs || src/lib.rs)
+    //        - Example : "mod gardent" => It will try to find either src/garden.rs || src/garden/mod.rs
+    //        - you can also declare submodules like "mod vegetables" and search src/garden/vegetables.rs || src/garden/vegetables/mod.rs
+    //        - Private vs Public: Code within a module is private (default is private). To declare public, run "pub mod"
+    //        - use "use" keyword to shorten crate::garden::vegetables::Asparagus to "Asparagus"
+    //        - 👇  Directories 👇
+    //        - backyard
+    //          ├── Cargo.lock
+    //          ├── Cargo.toml
+    //          └── src
+    //              ├── garden
+    //              │   └── vegetables.rs
+    //              ├── garden.rs
+    //              └── main.rs
     //    - Crate can either be binary crate or library crate
     //        - Binary crates are programs you can compile to an executable file (must have mail fn)
     //        - Library crates don't have a main function && don't compile to executable.
